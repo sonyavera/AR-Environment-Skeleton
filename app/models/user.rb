@@ -18,15 +18,17 @@ class User < ActiveRecord::Base
         my_activity_types.sum{|actype| actype.risk_score}
     end
 
-    #
+    # gives all logs on a given day
     def logs_by_date(date)
         my_logs.select{|log| log.date == date}
     end
 
+    # gives all activities on a given day
     def activity_type_by_date(date)
         logs_by_date(date).map {|log| log.activity_type}
     end
 
+    #sums scores on a given day
     def score_by_date(date)
         activity_type_by_date(date).sum{|actype| actype.risk_score}
     end
