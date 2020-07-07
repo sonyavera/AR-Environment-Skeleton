@@ -12,14 +12,15 @@ class User < ActiveRecord::Base
     end
 
     #returns array of all user's activitytype instances
-    def my_activity_types
+    def my_activity_types_by_log
         my_logs.map {|log| log.activity_type}
     end
 
     #sums risk scores for all of users activity_types - probably moot
     def sum_score
-        my_activity_types.sum{|actype| actype.risk_score}
+        my_activity_types_by_log.sum{|actype| actype.risk_score}
     end
+
 
     # gives all logs on a given day
     def logs_by_date(date)
@@ -31,34 +32,57 @@ class User < ActiveRecord::Base
         logs_by_date(date).map {|log| log.activity_type}
     end
 
-    #sums scores on a given day
+    #sums scores on a given day #not working!
     def score_by_date(date)
         activity_type_by_date(date).sum{|actype| actype.risk_score}
     end
 
     
-    def avg_score (date)
-        fourteen_days_ago = date -14
-        sum_scores = 0
-    
-        (date..fourteen_days_ago).each do |day|
-            binding.pry
-            #puts score_by_date(day)
+    def last_fourteen_days_score_avg(date) #does not include today
+            counter = 14
+            sum = 0
+        while counter > 0
+            sum += score_by_date(date-counter)
+            counter -= 1
         end
-
-        # until !date > fourteen_days_ago
-        #     if score_by_date(date) == nil 
-        #         sum_scores += 0
-        #     else
-        #         sum_scores += score_by_date(date)
-        #     end
-        #     date - 1
-        # end
-        # avg_score = sum_scores / 14
-        # loop through each day until day = today-14
-        # for each day call score_by_date
-        # and then go back one more day 
-        
+            avg_score = sum/14
+    end
+    
+    
+    def avg_score(date)
+        if score_by_date(date) == 0
+            last_fourteen_days_score_avg(date)
+        else
+            last_fourteen_days_score_avg(date+1)
+        end
     end
 
+
+    def delete_log(date) #continue with this method on wednesday
+        #User.where(self.activity_logs.date == date).destroy_all
+    end
+
+
+
+
+
+
+
+
 end
+
+
+
+
+
+
+
+
+
+
+
+    # def delete_log(activity_type_id, date)
+    #     User.logs_by_date(date).map {|log| log.activity_type_id}
+    #         User.where(log.activity_type_id == activity_type_id).destroy_all
+    #         binding.pry
+    # end
