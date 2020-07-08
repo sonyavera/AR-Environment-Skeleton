@@ -58,14 +58,16 @@ class User < ActiveRecord::Base
     end
 
     def update_most_recent_log(new_act_type)
-        
-        logs_by_date(Date.today).last
+        logs_by_date(Date.today).last.activity_type = new_act_type
     end
 
     def delete_most_recent_log
-    
+        logs_by_date(Date.today).last.destroy
     end
 
+    # def new_log(new_user, )
+    #     ActivityLog.new()
+    # end
 
 end
 

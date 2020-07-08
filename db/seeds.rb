@@ -17,7 +17,7 @@ actype6 = ActivityType.create(name: "Public transportation - over 15min", risk_s
 
 
 
-aclog1 = ActivityLog.create(user: user1, activity_type: actype1, date: Date.new(2020,7,7))
+aclog1 = ActivityLog.create(user: user1, activity_type: actype1, date: Date.new(2020,7,8))
 aclog2 = ActivityLog.create(user: user2, activity_type: actype3, date: Date.yesterday)
 aclog3 = ActivityLog.create(user: user3, activity_type: actype1, date: Date.new(2020,7,8))
 aclog4 = ActivityLog.create(user: user1, activity_type: actype2, date: Date.new(2020,7,7))
