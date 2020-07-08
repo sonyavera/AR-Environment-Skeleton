@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
     end
 
 
-    # gives all logs on a given day
+    # gives all logs of a user on a given day
     def logs_by_date(date)
         my_logs.select{|log| log.date == date}
     end
@@ -32,28 +32,56 @@ class User < ActiveRecord::Base
         logs_by_date(date).map {|log| log.activity_type}
     end
 
-    #sums scores on a given day #not working!
     def score_by_date(date)
         activity_type_by_date(date).sum{|actype| actype.risk_score}
     end
 
     
-    def avg_score_helper(date) #does not include today
-            counter = 14
-            sum = 0
-        while counter > 0
-            sum += score_by_date(date-counter)
-            counter -= 1
+    # def avg_score_helper(date) #already working
+    #         counter = 14
+    #         sum = 0
+    #     while counter > 0
+    #         sum += score_by_date(date-counter)
+    #         counter -= 1
+    #     end
+    #         avg_score = sum/14
+    # end
+
+
+    def num_of_consecutive_days_logged
+        num_of_consecutive_days_logged = 0
+        while 
+            logs_by_date(Date.today-num_of_consecutive_days_logged).length != 0 
+            num_of_consecutive_days_logged +=1
         end
-            avg_score = sum/14
+        num_of_consecutive_days_logged
     end
-    
-    
-    def avg_score
+        
+    def avg_score_helper(date)
+        counter = num_of_consecutive_days_logged
+        sum = 0
+    while counter > 0
+        sum += score_by_date(date-counter)
+        counter -= 1
+    end
+        avg_score = sum/num_of_consecutive_days_logged
+    end
+
+    def retrieve_avg_score
         if score_by_date(Date.today) == 0
             avg_score_helper(Date.today)
         else
             avg_score_helper(Date.today+1)
+        end
+    end
+    
+    def report_avg_score
+        if retrieve_avg_score < 5
+            puts "Your risk level is GREEN"
+        elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+            puts "Your risk level is YELLOW"
+        else
+            puts "Your risk level is RED"
         end
     end
 
@@ -65,9 +93,8 @@ class User < ActiveRecord::Base
         logs_by_date(Date.today).last.destroy
     end
 
-    # def new_log(new_user, )
-    #     ActivityLog.new()
-    # end
+
+
 
 end
 

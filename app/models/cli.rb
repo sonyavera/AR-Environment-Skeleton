@@ -91,6 +91,7 @@ class CommandLineInterface
             4. Outdoor - over 15 people
             5. Public transportation - under 15 min
             6. Public transportation - over 15min"
+            #7. Self quarantine, no activities
     end
 
     def valid_activity_input(num)
