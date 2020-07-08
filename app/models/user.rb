@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
     end
 
     def update_most_recent_log(new_act_type)
+        
         logs_by_date(Date.today).last
     end
 

@@ -7,11 +7,15 @@ user2 = User.create(name: "Maurice")
 user3 = User.create(name: "Jane")
 user4 = User.create(name: "Rebecca") # has no logs
 
-actype1 = ActivityType.create(name: "Biking", risk_score: 1)
-actype2 = ActivityType.create(name: "Shopping", risk_score: 5)
-actype3 = ActivityType.create(name: "Party!", risk_score: 10)
-actype4 = ActivityType.create(name: "Stadium dance", risk_score: 9999999)
-actype5 
+
+actype1 = ActivityType.create(name: "Indoor - under 15 people", risk_score: 5)
+actype2 = ActivityType.create(name: "Indoor - over 50 people", risk_score: 100)
+actype3 = ActivityType.create(name: "Outdoor - under 15 people", risk_score: 1)
+actype4 = ActivityType.create(name: "Outdoor - over 15 people", risk_score: 20)
+actype5 = ActivityType.create(name: "Public transportation - under 15 min", risk_score: 5)
+actype6 = ActivityType.create(name: "Public transportation - over 15min", risk_score: 10)
+
+
 
 aclog1 = ActivityLog.create(user: user1, activity_type: actype1, date: Date.new(2020,7,7))
 aclog2 = ActivityLog.create(user: user2, activity_type: actype3, date: Date.yesterday)
