@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
     end
 
     
-    def last_fourteen_days_score_avg(date) #does not include today
+    def avg_score_helper(date) #does not include today
             counter = 14
             sum = 0
         while counter > 0
@@ -49,24 +49,21 @@ class User < ActiveRecord::Base
     end
     
     
-    def avg_score(date)
-        if score_by_date(date) == 0
-            last_fourteen_days_score_avg(date)
+    def avg_score
+        if score_by_date(Date.today) == 0
+            avg_score_helper(Date.today)
         else
-            last_fourteen_days_score_avg(date+1)
+            avg_score_helper(Date.today+1)
         end
     end
 
-
-    def delete_log(date) #continue with this method on wednesday
-        #User.where(self.activity_logs.date == date).destroy_all
+    def update_most_recent_log(new_act_type)
+        logs_by_date(Date.today).last
     end
 
-
-
-
-
-
+    def delete_most_recent_log
+    
+    end
 
 
 end
@@ -75,7 +72,14 @@ end
 
 
 
-
+# come back to it as stretch goal - delees all logs on a given day
+    # def delete_log(today_date) #continue with this method on wednesday
+    #     #binding.pry
+    #     logs_today = logs_by_date(today_date)
+    #     binding.pry
+    #     "last line"
+    #     #logs_today.where(date == today_date).destroy_all
+    # end
 
 
 

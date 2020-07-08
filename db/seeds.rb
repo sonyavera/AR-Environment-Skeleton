@@ -11,7 +11,7 @@ actype1 = ActivityType.create(name: "Biking", risk_score: 1)
 actype2 = ActivityType.create(name: "Shopping", risk_score: 5)
 actype3 = ActivityType.create(name: "Party!", risk_score: 10)
 actype4 = ActivityType.create(name: "Stadium dance", risk_score: 9999999)
-
+actype5 
 
 aclog1 = ActivityLog.create(user: user1, activity_type: actype1, date: Date.new(2020,7,7))
 aclog2 = ActivityLog.create(user: user2, activity_type: actype3, date: Date.yesterday)
