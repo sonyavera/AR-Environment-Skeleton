@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
         num_of_consecutive_days_logged
     end
         
-    def avg_score_helper(date)
+    def avg_score_helper(date) #already works
         counter = num_of_consecutive_days_logged
         sum = 0
     while counter > 0
@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
         avg_score = sum/num_of_consecutive_days_logged
     end
 
+
     def retrieve_avg_score
         if score_by_date(Date.today) == 0
             avg_score_helper(Date.today)
@@ -74,27 +75,74 @@ class User < ActiveRecord::Base
             avg_score_helper(Date.today+1)
         end
     end
-    
-    def report_avg_score
-        if retrieve_avg_score < 5
-            puts "Your risk level is GREEN"
-        elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
-            puts "Your risk level is YELLOW"
+
+
+    def report_risk_level 
+        if num_of_consecutive_days_logged >= 14
+            if retrieve_avg_score < 5
+                puts "Your risk level is GREEN."
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+                puts "Your risk level is YELLOW."
+            else
+                puts "Your risk level is RED."
+            end
         else
-            puts "Your risk level is RED"
+            if retrieve_avg_score < 5
+                puts "Your risk level is GREEN. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+                puts "Your risk level is YELLOW. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+            else
+                puts "Your risk level is RED. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+            end
+        end
+    end
+
+    def risk_level_color
+        if retrieve_avg_score < 5
+            risk_level = "GREEN"
+        elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+            risk_level = "YELLOW"
+        else
+            risk_level = "RED"
+        end
+        risk_level
+    end
+
+    def give_recs #not tested yet
+        if risk_level_color == "GREEN"
+            puts "Since your current risk level is GREEN, you should..."
+        elsif risk_level_color == "YELLOW"
+            puts "Since your current risk level is YELLOW, you should..."
+        else
+            puts "Since your current risk level is RED, you should.."
         end
     end
 
     def update_most_recent_log(new_act_type)
-        logs_by_date(Date.today).last.activity_type = new_act_type
+        logs_by_date(Date.today).last.update(activity_type: new_act_type)
     end
 
+   
     def delete_most_recent_log
+        binding.pry
         logs_by_date(Date.today).last.destroy
     end
 
+    def report_last_activity_type
+        logs_by_date(Date.today).last.activity_type.name.to_s
+    end
 
+    def show_trend #how will we seed the app so that this works properly in cli
+        counter = 0
+        trend_string = " "
+        until counter == num_of_consecutive_days_logged
+            trend_string += "Date:#{Date.today-counter} Score:#{score_by_date(Date.today-counter)} \n"
+            counter += 1
+        end
+        puts trend_string.strip
+    end
 
+    
 
 end
 
