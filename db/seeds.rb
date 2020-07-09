@@ -2,6 +2,7 @@ User.delete_all
 ActivityType.delete_all
 ActivityLog.delete_all
 
+#HIiiii
 
 # #user1 = User.create(name: "Stephanie")
 # user2 = User.create(name: "Maurice")
