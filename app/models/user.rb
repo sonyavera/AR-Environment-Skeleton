@@ -36,6 +36,17 @@ class User < ActiveRecord::Base
         activity_type_by_date(date).sum{|actype| actype.risk_score}
     end
 
+    def risk_level_by_date(date)
+        if score_by_date(date) < 5
+            risk_level = "Green"
+        elsif score_by_date(date) >= 5 && retrieve_avg_score < 6
+            risk_level = "Yellow"
+        else
+            risk_level = "Red"
+        end
+        risk_level
+    end
+
 
     def num_of_consecutive_days_logged
         num_of_consecutive_days_logged = 0
@@ -79,11 +90,11 @@ class User < ActiveRecord::Base
             end
         else
             if retrieve_avg_score < 5
-                puts "Your risk level is GREEN. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+                puts "Your risk level is GREEN. This your behavior has been low risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
             elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
-                puts "Your risk level is YELLOW. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+                puts "Your risk level is YELLOW. This means your behavior has been medium risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
             else
-                puts "Your risk level is RED. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
+                puts "Your risk level is RED. This means your behavior has been high risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). For the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19."
             end
         end
     end
@@ -133,7 +144,7 @@ class User < ActiveRecord::Base
             counter = 0
             trend_string = " "
             until counter == num_of_consecutive_days_logged
-                trend_string += "Date:#{Date.today-counter} Score:#{score_by_date(Date.today-counter)} \n"
+                trend_string += "Date: #{Date.today-counter} --> Risk Level: #{risk_level_by_date(Date.today-counter)} \n"
                 counter += 1
             end
             puts trend_string.strip

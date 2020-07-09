@@ -32,7 +32,7 @@ class CommandLineInterface
     end
 
     def enter_user_name_prompt
-        puts "Enter user name:"
+        puts "Enter username:"
     end
     
     def start
@@ -90,17 +90,17 @@ class CommandLineInterface
     end
 
     def menu_prompt
-        puts "What would you like to do?
+        puts "\nWhat would you like to do?
             1. Log a new activity.
             2. Update or delete an activity. 
-            3. Find out your cumulative COVID risk score.
+            3. Find out your COVID risk level by color: green, yellow or red.
             4. Get a recommendation for which activities are safe for you to do according to your current risk score.
-            5. See a visual representation of your risk trend over the past 2 weeks.
-            9 quit"
+            5. See your risk level for each day over the past 14 days.
+            6. quit"
     end
 
     def valid_start_option_input(input)
-        if input == 1 || input == 2 || input == 3 || input == 4 || input == 5 || input == 9 #change last input to 6
+        if input == 1 || input == 2 || input == 3 || input == 4 || input == 5 || input == 6 #change last input to 6
             return true
         else
             return false
@@ -184,8 +184,6 @@ class CommandLineInterface
                 user_name = user.name
                 user.delete_most_recent_log
                 #reassign_user(user_name)
-                binding.pry
-                "last line"
             end
         else
             puts "You have not made any logs today, so you are not able to make an update or delete a log.\n\n"
@@ -224,10 +222,9 @@ class CommandLineInterface
     end
 
     def reassign_user(name)
-        binding.pry
+        #binding.pry
         @user = User.all.last
         #temp User.find_by(:name = name)
-        
         #temp = ActivityLog.all.find{|log_instance| log_instance.user.name == name}.user
         #self.user = temp
     end
