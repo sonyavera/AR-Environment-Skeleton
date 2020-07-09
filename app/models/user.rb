@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
     end
 
     def report_last_activity_type
-            logs_by_date(Date.today).last.activity_type.name.to_s
+        logs_by_date(Date.today).last.activity_type.name.to_s
     end
 
     def show_trend #how will we seed the app so that this works properly in cli
@@ -147,7 +147,8 @@ class User < ActiveRecord::Base
     end
 
     def logged_today?
-        logs_by_date(Date.today) != []
+        logs_by_date(Date.today).count > 0
+        #logs_by_date(Date.today) != []
     end
 
     

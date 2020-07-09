@@ -21,7 +21,7 @@ class CommandLineInterface
                     menu
                     break
                 else    
-                    puts "No such username"
+                    puts "No such username."
                 end
             end
         end
@@ -38,15 +38,16 @@ class CommandLineInterface
     def start
         prompt_welcome
         loop do
-            username = gets.chomp
-            if !already_username(username) # @?
+            @username = gets.chomp
+            if !already_username(@username) 
                 break
             else
-                puts "Already a username"
-                puts "Please try another name"
+                puts "Already a username."
+                puts "Please try another name."
             end
         end
-        create_profile(username)
+        #binding.pry
+        create_profile(@username)
         menu
     end
 
@@ -83,7 +84,7 @@ class CommandLineInterface
                     when 5 
                         user.show_trend 
                 end 
-                break if input1 == 9
+                break if input1 == 6 #changed to 6
             end
         end
     end
@@ -95,11 +96,11 @@ class CommandLineInterface
             3. Find out your cumulative COVID risk score.
             4. Get a recommendation for which activities are safe for you to do according to your current risk score.
             5. See a visual representation of your risk trend over the past 2 weeks.
-            9. quit"
+            9 quit"
     end
 
     def valid_start_option_input(input)
-        if input == 1 || input == 2 || input == 3 || input == 4 || input == 5 || input == 9
+        if input == 1 || input == 2 || input == 3 || input == 4 || input == 5 || input == 9 #change last input to 6
             return true
         else
             return false
@@ -107,7 +108,7 @@ class CommandLineInterface
     end
 
     def invalid
-        puts "Please enter valid input."
+        puts "Please enter a valid input."
     end
 
     def log_activity
@@ -157,7 +158,7 @@ class CommandLineInterface
     end
 
     def store_activity(number)
-        activity_type_input = ActivityType.all[number]
+        activity_type_input = ActivityType.all[number-1]
         ActivityLog.create(user: self.user, activity_type: activity_type_input, date: Date.today)
         #binding.pry
     end
@@ -168,7 +169,7 @@ class CommandLineInterface
 
     def update_delete
         if user.logged_today?
-            binding.pry
+            #binding.pry
             last_log = user.my_logs.last
             show_log(last_log)
             update_delete_log_prompt
@@ -182,7 +183,9 @@ class CommandLineInterface
             elsif input == "D"
                 user_name = user.name
                 user.delete_most_recent_log
-                reassign_user(user_name)
+                #reassign_user(user_name)
+                binding.pry
+                "last line"
             end
         else
             puts "You have not made any logs today, so you are not able to make an update or delete a log.\n\n"
@@ -214,13 +217,19 @@ class CommandLineInterface
             invalid
             input = gets.chomp.to_i
         end
-        user.update_most_recent_log(ActivityType.create(name: input))
+        #user.update_most_recent_log(ActivityType.create(name: input))
+        activity_type_input = ActivityType.all[input-1]
+        ActivityLog.create(user: self.user, activity_type: activity_type_input, date: Date.today)
         #binding.pry
     end
 
     def reassign_user(name)
-        temp = ActivityLog.all.find{|log_instance| log_instance.user.name == name}.user
-        self.user = temp
+        binding.pry
+        @user = User.all.last
+        #temp User.find_by(:name = name)
+        
+        #temp = ActivityLog.all.find{|log_instance| log_instance.user.name == name}.user
+        #self.user = temp
     end
 
     def update_prompt
