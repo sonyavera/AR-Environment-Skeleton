@@ -36,17 +36,6 @@ class User < ActiveRecord::Base
         activity_type_by_date(date).sum{|actype| actype.risk_score}
     end
 
-    
-    # def avg_score_helper(date) #already working
-    #         counter = 14
-    #         sum = 0
-    #     while counter > 0
-    #         sum += score_by_date(date-counter)
-    #         counter -= 1
-    #     end
-    #         avg_score = sum/14
-    # end
-
 
     def num_of_consecutive_days_logged
         num_of_consecutive_days_logged = 0
@@ -77,8 +66,10 @@ class User < ActiveRecord::Base
     end
 
 
-    def report_risk_level 
-        if num_of_consecutive_days_logged >= 14
+    def report_risk_level #not tested yet with new if statement
+        if num_of_consecutive_days_logged == 0
+            puts "You have not logged any activities today or yesterday. In order to see your risk level today, you must log your activities."
+        elsif num_of_consecutive_days_logged >= 14
             if retrieve_avg_score < 5
                 puts "Your risk level is GREEN."
             elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
@@ -98,23 +89,29 @@ class User < ActiveRecord::Base
     end
 
     def risk_level_color
-        if retrieve_avg_score < 5
-            risk_level = "GREEN"
-        elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
-            risk_level = "YELLOW"
+        if logged_today?
+            if retrieve_avg_score < 5
+                risk_level = "GREEN"
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+                risk_level = "YELLOW"
+            else
+                risk_level = "RED"
+            end
+            risk_level
         else
-            risk_level = "RED"
+            nil
         end
-        risk_level
     end
 
-    def give_recs #not tested yet
-        if risk_level_color == "GREEN"
-            puts "Since your current risk level is GREEN, you should..."
+    def give_recs 
+        if risk_level_color == nil
+            puts "In order to get recommendations for your behavior, please log your activities to generate a risk level."
+        elsif risk_level_color == "GREEN"
+            puts "Your current risk level is GREEN, which means your behavior has been low-risk on average. Taking precautions such as wearing a face covering and practicing social distancing, you can feel safe visiting with small groups of friends and family outdoors, or in well-ventilated indoor spaces for brief periods of time."
         elsif risk_level_color == "YELLOW"
-            puts "Since your current risk level is YELLOW, you should..."
+            puts "Your current risk level is YELLOW, which means your behavior has been medium-risk on average. Be diligent about using a face covering and practicing social distancing to avoid potentially infecting others. Try to limit time on public transportation and indoor gatherings."
         else
-            puts "Since your current risk level is RED, you should.."
+            puts "Your current risk level is RED, which means your behavior has been high-risk on average. You should avoid public transportation, social gatherings, and consider getting tested for COVID-19 (it's free!). Aim to reduce your risky behavior for at least 2 weeks before visiting with any vulnerable family or friends."
         end
     end
 
@@ -124,22 +121,33 @@ class User < ActiveRecord::Base
 
    
     def delete_most_recent_log
-        binding.pry
         logs_by_date(Date.today).last.destroy
     end
 
     def report_last_activity_type
-        logs_by_date(Date.today).last.activity_type.name.to_s
+            logs_by_date(Date.today).last.activity_type.name.to_s
     end
 
     def show_trend #how will we seed the app so that this works properly in cli
-        counter = 0
-        trend_string = " "
-        until counter == num_of_consecutive_days_logged
-            trend_string += "Date:#{Date.today-counter} Score:#{score_by_date(Date.today-counter)} \n"
-            counter += 1
+        if logged_today_or_yesterday?
+            counter = 0
+            trend_string = " "
+            until counter == num_of_consecutive_days_logged
+                trend_string += "Date:#{Date.today-counter} Score:#{score_by_date(Date.today-counter)} \n"
+                counter += 1
+            end
+            puts trend_string.strip
+        else
+            puts "You must log your activities in order to see your behavior trend."
         end
-        puts trend_string.strip
+    end
+
+    def logged_today_or_yesterday?
+        num_of_consecutive_days_logged  != 0
+    end
+
+    def logged_today?
+        logs_by_date(Date.today) != []
     end
 
     

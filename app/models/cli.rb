@@ -1,21 +1,63 @@
 class CommandLineInterface
-    attr_accessor :user
+    attr_accessor :user, :username
     def initialize(user = nil)
         #binding.pry
         @user = user
-        start
+        log_in
     end
 
+    def log_in
+        new_user_prompt
+        input = gets.chomp
+        valid_yes_or_no_input(input)
+        if input == "Y"
+           start
+        elsif input == "N"
+            loop do
+                enter_user_name_prompt
+                user_name = gets.chomp
+                if User.find_by(name: user_name)
+                    self.user = User.find_by(name: user_name)
+                    menu
+                    break
+                else    
+                    puts "No such username"
+                end
+            end
+        end
+    end
+
+    def new_user_prompt
+        puts "Are you a new user? [Y/N]"
+    end
+
+    def enter_user_name_prompt
+        puts "Enter user name:"
+    end
+    
     def start
         prompt_welcome
-        create_profile(name = gets.chomp)
+        loop do
+            username = gets.chomp
+            if !already_username(username) # @?
+                break
+            else
+                puts "Already a username"
+                puts "Please try another name"
+            end
+        end
+        create_profile(username)
         menu
     end
 
     def prompt_welcome
         puts "Welcome to the Covid Risk Tracker app."
         puts "This app helps you keep track of your COVID-19 exposure levels and get recommendations for safe activities based on your exposure risk level."
-        puts "To create your profile, please enter your name."
+        puts "To create your profile, please enter a username."
+    end
+
+    def already_username(name)
+        !!User.find_by(name: name)
     end
 
     def create_profile(name)
@@ -125,20 +167,25 @@ class CommandLineInterface
     end
 
     def update_delete
-        last_log = user.my_logs.last
-        show_log(last_log)
-        update_delete_log_prompt
-        input = gets.chomp
-        while !valid_update_or_delete_input(input) do 
-            invalid
-            input = gets.chomp 
-        end
-        if input == "U"
-            update_log 
-        elsif input == "D"
-            user_name = user.name
-            user.delete_most_recent_log
-            reassign_user(user_name)
+        if user.logged_today?
+            binding.pry
+            last_log = user.my_logs.last
+            show_log(last_log)
+            update_delete_log_prompt
+            input = gets.chomp
+            while !valid_update_or_delete_input(input) do 
+                invalid
+                input = gets.chomp 
+            end
+            if input == "U"
+                update_log 
+            elsif input == "D"
+                user_name = user.name
+                user.delete_most_recent_log
+                reassign_user(user_name)
+            end
+        else
+            puts "You have not made any logs today, so you are not able to make an update or delete a log.\n\n"
         end
     end
 
