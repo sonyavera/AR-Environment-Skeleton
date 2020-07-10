@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
 
     def report_risk_level #not tested yet with new if statement
         if num_of_consecutive_days_logged == 0
-            puts "\nYou have not logged any activities today or yesterday. In order to see your risk level today, you must log your activities."
+            puts "\nYou have not logged any activities today. In order to see your risk level today, you must log your activities."
         elsif num_of_consecutive_days_logged >= 14
             if retrieve_avg_score < 5
                 puts "\nYour risk level is GREEN.".green

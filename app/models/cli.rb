@@ -94,8 +94,8 @@ class CommandLineInterface
             2. Update or delete most recent activity. 
             3. Find out your COVID risk level by color: green, yellow or red.
             4. Get a recommendation for which activities are safe for you to do according to your current risk score.
-            5. See your risk level for each day over the past 14 days.
-            6. quit"
+            5. See your risk level for each consecutively logged day up to 14 days.
+            6. Quit"
     end
 
     def valid_start_option_input(input)
