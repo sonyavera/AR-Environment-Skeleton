@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
     def risk_level_by_date(date)
         if score_by_date(date) < 5
             risk_level = "Green"
-        elsif score_by_date(date) >= 5 && retrieve_avg_score < 6
+        elsif score_by_date(date) >= 5 && retrieve_avg_score < 8
             risk_level = "Yellow"
         else
             risk_level = "Red"
@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
         elsif num_of_consecutive_days_logged >= 14
             if retrieve_avg_score < 5
                 puts "\nYour risk level is GREEN.".green
-            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 8
                 puts "\nYour risk level is YELLOW.".yellow
             else
                 puts "\nYour risk level is RED.".red
@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
         else
             if retrieve_avg_score < 5
                 puts "\nYour risk level is GREEN. This your behavior has been low risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). \n\nFor the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19.".green
-            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 8
                 puts "\nYour risk level is YELLOW. This means your behavior has been medium risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). \n\nFor the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19.".yellow
             else
                 puts "\nYour risk level is RED. This means your behavior has been high risk. You've logged your activities for #{num_of_consecutive_days_logged} day(s). \n\nFor the most accurate risk level, try to log your activities (or lack thereof) for 14 consecutive days, which is the incubation period for COVID-19.".red
@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
         if logged_today?
             if retrieve_avg_score < 5
                 risk_level = "GREEN"
-            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 6
+            elsif retrieve_avg_score >= 5 && retrieve_avg_score < 8
                 risk_level = "YELLOW"
             else
                 risk_level = "RED"

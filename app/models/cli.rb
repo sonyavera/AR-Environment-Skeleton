@@ -225,13 +225,7 @@ class CommandLineInterface
     end
 
     def update_prompt
-        puts "Write the number that corresponds to the activity you'd like to change your log to:\n\n"
-        puts "1. Indoor - under 15 people
-            2. Indoor - over 50 people
-            3. Outdoor - under 15 people
-            4. Outdoor - over 15 people
-            5. Public transportation - under 15 min
-            6. Public transportation - over 15min
-            7. Self Quarantine, no activities"
+        puts "\nWrite the number that corresponds to the activity you'd like to change your log to:\n"
+        puts "1. Indoor - under 15 people\n2. Indoor - over 50 people\n3. Outdoor - under 15 people\n4. Outdoor - over 15 people\n5. Public transportation - under 15 min\n6. Public transportation - over 15min\n7. Self Quarantine, no activities"
     end
 end

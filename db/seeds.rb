@@ -39,8 +39,8 @@ al21 = ActivityLog.create(user: forgetful_user, activity_type: actype1, date: Da
 al22 = ActivityLog.create(user: forgetful_user, activity_type: actype4, date: Date.new(2020,6,28))
 al23 = ActivityLog.create(user: forgetful_user, activity_type: actype6, date: Date.new(2020,7,1))
 al24 = ActivityLog.create(user: forgetful_user, activity_type: actype6, date: Date.new(2020,7,4))
-al25 = ActivityLog.create(user: forgetful_user, activity_type: actype7, date: Date.new(2020,7,9))
-al26 = ActivityLog.create(user: forgetful_user, activity_type: actype7, date: Date.new(2020,7,10))
+al25 = ActivityLog.create(user: forgetful_user, activity_type: actype7, date: Date.new(2020,7,8))
+al26 = ActivityLog.create(user: forgetful_user, activity_type: actype7, date: Date.new(2020,7,9))
 
 
 
